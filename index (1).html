@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pojok Cagar Budaya SMAN 1 Blora – Jendela Ilmu dan Sejarah Berkelanjutan</title>
+  <meta name="description" content="Website resmi Perpustakaan SMAN 1 Blora: sejarah perpustakaan dan koleksi artikel benda serta arsip bersejarah sekolah.">
+
+  <!-- Font (opsional). Jika offline, browser otomatis memakai font cadangan. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       DESIGN TOKENS – ubah warna utama website di sini
+       ========================================================= */
+    :root {
+      --navy:      #0d2240;
+      --navy-2:    #163158;
+      --navy-3:    #23426f;
+      --gold:      #b9974f;
+      --gold-soft: #eadcb9;
+      --gold-deep: #8a6c2f;
+      --paper:     #f4f5f8;
+      --white:     #ffffff;
+      --ink:       #1a2233;
+      --muted:     #556076;
+      --line:      #dde1e9;
+
+      --serif: "Newsreader", Georgia, "Times New Roman", serif;
+      --sans:  "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+      --radius: 10px;
+      --header-h: 72px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 12px); }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--ink);
+      background: var(--paper);
+      -webkit-font-smoothing: antialiased;
+    }
+    body.no-scroll { overflow: hidden; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+    h1, h2, h3 { font-family: var(--serif); line-height: 1.15; margin: 0; letter-spacing: -0.01em; }
+    p { margin: 0 0 1em; }
+
+    :focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+
+    .container { width: min(1160px, 100% - 2.5rem); margin-inline: auto; }
+    .section { padding: clamp(3.5rem, 8vw, 6rem) 0; }
+    .section-head { max-width: 640px; margin-bottom: 2.2rem; }
+    .section-head h2 { font-size: clamp(1.9rem, 4.5vw, 2.7rem); color: var(--navy); font-weight: 700; }
+    .section-head p { margin-top: .8rem; color: var(--muted); font-size: 1.05rem; }
+    .section-head::after { content: ""; display: block; width: 56px; height: 3px; background: var(--gold); margin-top: 1.1rem; }
+
+    /* ---------- Tombol ---------- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+      font: 600 .98rem/1 var(--sans);
+      padding: .95rem 1.5rem;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer; text-decoration: none;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .btn-gold { background: var(--gold); color: var(--navy); }
+    .btn-gold:hover { background: #c9a960; }
+    .btn-ghost { border-color: rgba(255,255,255,.4); color: var(--white); }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold-soft); }
+    .btn-navy { background: var(--navy); color: var(--white); }
+    .btn-navy:hover { background: var(--navy-3); }
+    .btn-outline { border-color: var(--navy); color: var(--navy); background: transparent; }
+    .btn-outline:hover { background: var(--navy); color: var(--white); }
+
+    /* =========================================================
+       HEADER / NAVBAR
+       ========================================================= */
+    .site-header {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--navy);
+      color: var(--white);
+      border-bottom: 3px solid var(--gold);
+    }
+    .header-inner { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .brand { display: flex; align-items: center; gap: .8rem; text-decoration: none; min-width: 0; }
+    .brand-logo { flex: none; width: 46px; height: 46px; }
+    .brand-text { display: flex; flex-direction: column; min-width: 0; }
+    .brand-name { font: 700 .95rem/1.15 var(--sans); letter-spacing: .04em; }
+    .brand-tag { font-family: var(--serif); font-style: italic; font-size: .85rem; color: var(--gold-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .nav-toggle {
+      display: none; flex: none;
+      width: 46px; height: 46px; border-radius: 8px;
+      background: transparent; border: 1px solid rgba(255,255,255,.3);
+      cursor: pointer; padding: 0; position: relative;
+    }
+    .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after {
+      content: ""; position: absolute; left: 12px; right: 12px; height: 2px; background: var(--white);
+      transition: transform .25s, opacity .2s, top .25s;
+    }
+    .nav-toggle span { top: 22px; }
+    .nav-toggle span::before { left: 0; right: 0; top: -7px; }
+    .nav-toggle span::after  { left: 0; right: 0; top: 7px; }
+    .nav-toggle[aria-expanded="true"] span { background: transparent; }
+    .nav-toggle[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
+    .nav-toggle[aria-expanded="true"] span::after  { top: 0; transform: rotate(-45deg); }
+
+    .nav-panel { display: flex; align-items: center; gap: 1.4rem; }
+    .nav-links { list-style: none; display: flex; gap: .2rem; margin: 0; padding: 0; }
+    .nav-links a {
+      display: block; padding: .55rem .8rem; border-radius: 6px;
+      text-decoration: none; font-weight: 500; font-size: .95rem; color: #dbe3f0;
+    }
+    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,.08); }
+    .nav-links a.active { color: var(--gold-soft); box-shadow: inset 0 -2px 0 var(--gold); border-radius: 0; }
+
+    .search { position: relative; }
+    .search input {
+      width: 230px; padding: .65rem 1rem .65rem 2.5rem;
+      font: 500 .93rem var(--sans); color: var(--white);
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.25); border-radius: 8px;
+    }
+    .search input::placeholder { color: #aebbd2; }
+    .search input:focus { outline: none; border-color: var(--gold); background: rgba(255,255,255,.16); }
+    .search svg { position: absolute; left: .8rem; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: #aebbd2; pointer-events: none; }
+
+    @media (max-width: 960px) {
+      .brand-tag { display: none; }
+      .nav-toggle { display: block; }
+      .nav-panel {
+        display: none;
+        position: absolute; top: 100%; left: 0; right: 0;
+        flex-direction: column; align-items: stretch; gap: 1rem;
+        background: var(--navy); padding: 1rem 1.25rem 1.5rem;
+        border-bottom: 3px solid var(--gold);
+        box-shadow: 0 18px 30px rgba(5, 15, 35, .35);
+      }
+      .nav-panel.open { display: flex; }
+      .nav-links { flex-direction: column; }
+      .nav-links a { padding: .85rem .5rem; font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,.08); border-radius: 0; }
+      .nav-links a.active { box-shadow: none; border-left: 3px solid var(--gold); padding-left: .8rem; }
+      .search input { width: 100%; padding-block: .85rem; }
+    }
+    @media (max-width: 400px) { .brand-name { font-size: .8rem; } .brand-logo { width: 40px; height: 40px; } }
+
+    /* =========================================================
+       HERO
+       ========================================================= */
+    .hero {
+      position: relative; overflow: hidden;
+      background:
+        radial-gradient(900px 400px at 85% 10%, rgba(185,151,79,.18), transparent 60%),
+        linear-gradient(160deg, var(--navy) 0%, var(--navy-2) 100%);
+      color: var(--white);
+      padding: clamp(3.5rem, 9vw, 6.5rem) 0;
+    }
+    /* Garis-garis halus seperti kertas kartu katalog */
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(to bottom, transparent 0 39px, rgba(255,255,255,.045) 39px 40px);
+      pointer-events: none;
+    }
+    .hero-grid { position: relative; display: grid; grid-template-columns: 1.15fr .85fr; gap: 3rem; align-items: center; }
+    .hero h1 { font-size: clamp(2.4rem, 6.4vw, 4.4rem); font-weight: 700; max-width: 14ch; }
+    .hero-lead { margin-top: 1.4rem; max-width: 52ch; font-size: 1.12rem; color: #d3dcec; }
+    .hero-actions { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: .8rem; }
+
+    /* Kartu katalog perpustakaan (menampilkan koleksi unggulan) */
+    .catalog-card {
+      justify-self: center; width: min(400px, 100%);
+      background: #fbf8ef; color: var(--ink);
+      border-radius: 6px; padding: 1.6rem 1.6rem 3rem;
+      transform: rotate(2.2deg);
+      box-shadow: 0 30px 60px rgba(3, 10, 25, .45);
+      position: relative; cursor: pointer; text-align: left; border: 0; font: inherit;
+      background-image: repeating-linear-gradient(to bottom, transparent 0 29px, #e2d9c0 29px 30px);
+      background-position: 0 3.4rem;
+    }
+    .catalog-card:hover { transform: rotate(0deg); }
+    .catalog-card { transition: transform .3s ease; }
+    .catalog-card::after { /* lubang penjepit kartu */
+      content: ""; position: absolute; left: 50%; bottom: 1rem; width: 16px; height: 16px; margin-left: -8px;
+      border-radius: 50%; background: var(--navy-2); box-shadow: inset 0 2px 3px rgba(0,0,0,.5);
+    }
+    .cc-label { display: block; font-size: .8rem; color: var(--gold-deep); font-weight: 600; margin-bottom: .2rem; }
+    .cc-title { display: block; font-family: var(--serif); font-size: 1.55rem; font-weight: 700; line-height: 1.2; color: var(--navy); margin-bottom: 1rem; }
+    .cc-row { display: flex; gap: 1.4rem; margin-bottom: 1rem; }
+    .cc-row b { display: block; font-family: var(--serif); font-size: 1.15rem; color: var(--navy); }
+    .cc-text { display: block; font-size: .93rem; color: #3f485a; line-height: 30px; margin-bottom: .4rem; }
+    .cc-more { display: block; font-weight: 700; color: var(--navy); font-size: .9rem; }
+    .cc-count { display: block; margin-top: .9rem; font-size: .82rem; color: var(--muted); }
+
+    @media (max-width: 860px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .catalog-card { transform: rotate(1deg); }
+    }
+
+    /* =========================================================
+       SEJARAH PERPUSTAKAAN
+       ========================================================= */
+    #sejarah { background: var(--white); }
+    .sejarah-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+    .prose { font-family: var(--serif); font-size: 1.16rem; line-height: 1.75; color: #2a3346; max-width: 62ch; }
+    .peran { margin-top: 1.8rem; display: grid; gap: 1rem; }
+    .peran div { border-left: 3px solid var(--gold); padding-left: 1rem; }
+    .peran h3 { font: 700 1.05rem var(--sans); color: var(--navy); margin-bottom: .2rem; }
+    .peran p { margin: 0; font-size: .98rem; color: var(--muted); font-family: var(--sans); }
+
+    .timeline { list-style: none; margin: 0; padding: 0 0 0 1.6rem; position: relative; }
+    .timeline::before { content: ""; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 2px; background: var(--gold-soft); }
+    .timeline li { position: relative; padding-bottom: 2rem; }
+    .timeline li:last-child { padding-bottom: 0; }
+    .timeline li::before {
+      content: ""; position: absolute; left: -1.6rem; top: .45rem; width: 12px; height: 12px;
+      background: var(--gold); border: 3px solid var(--white); box-shadow: 0 0 0 2px var(--gold); border-radius: 50%;
+    }
+    .tl-year { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: var(--navy); }
+    .tl-title { font-weight: 700; font-size: 1rem; margin: .1rem 0 .3rem; }
+    .timeline p { margin: 0; color: var(--muted); font-size: .98rem; }
+
+    @media (max-width: 860px) { .sejarah-grid { grid-template-columns: 1fr; } }
+
+    /* =========================================================
+       KOLEKSI
+       ========================================================= */
+    .filters { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+    .chip {
+      font: 600 .9rem var(--sans); padding: .55rem 1.1rem; cursor: pointer;
+      border: 1px solid var(--line); background: var(--white); color: var(--navy); border-radius: 999px;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .chip:hover { border-color: var(--navy); }
+    .chip[aria-pressed="true"] { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .result-info { color: var(--muted); font-size: .93rem; margin-bottom: 1.6rem; min-height: 1.5em; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.6rem; }
+    .card {
+      display: flex; flex-direction: column; background: var(--white);
+      border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .card:hover { border-color: var(--gold); box-shadow: 0 14px 34px rgba(13,34,64,.12); }
+    .card-img { position: relative; aspect-ratio: 4 / 3; background: var(--navy); overflow: hidden; }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .badge {
+      position: absolute; left: .8rem; top: .8rem;
+      background: var(--gold); color: var(--navy); font-weight: 700; font-size: .78rem;
+      padding: .3rem .7rem; border-radius: 4px;
+    }
+    .card-body { display: flex; flex-direction: column; flex: 1; padding: 1.3rem 1.3rem 1.4rem; }
+    .card-year { font-size: .88rem; font-weight: 600; color: var(--gold-deep); margin-bottom: .3rem; }
+    .card h3 { font-size: 1.4rem; color: var(--navy); font-weight: 700; margin-bottom: .6rem; }
+    .card-sum {
+      color: var(--muted); font-size: .96rem; margin-bottom: 1.2rem;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .card .btn { margin-top: auto; padding: .8rem 1rem; font-size: .93rem; }
+
+    .empty {
+      grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem;
+      background: var(--white); border: 1px dashed var(--line); border-radius: var(--radius);
+    }
+    .empty h3 { font-size: 1.5rem; color: var(--navy); margin-bottom: .5rem; }
+    .empty p { color: var(--muted); }
+
+    /* =========================================================
+       MODAL
+       ========================================================= */
+    .modal {
+      position: fixed; inset: 0; z-index: 100;
+      display: none; align-items: center; justify-content: center; padding: 1rem;
+      background: rgba(6, 16, 36, .78); backdrop-filter: blur(3px);
+    }
+    .modal.open { display: flex; animation: fade .2s ease; }
+    .modal-box {
+      position: relative; width: min(780px, 100%); max-height: 92vh; overflow-y: auto;
+      background: var(--white); border-radius: 12px; border-top: 5px solid var(--gold);
+      box-shadow: 0 40px 80px rgba(0,0,0,.4);
+      animation: rise .28s ease;
+    }
+    .modal-close {
+      position: absolute; right: .8rem; top: .8rem; z-index: 2;
+      width: 42px; height: 42px; border-radius: 50%; border: 0; cursor: pointer;
+      background: var(--navy); color: var(--white); font-size: 1.5rem; line-height: 1;
+    }
+    .modal-close:hover { background: var(--navy-3); }
+    .modal-img { aspect-ratio: 16 / 9; background: var(--navy); }
+    .modal-img img { width: 100%; height: 100%; object-fit: cover; }
+    .modal-content { padding: clamp(1.4rem, 4vw, 2.4rem); }
+    .modal-meta { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+    .modal-meta span { font-size: .85rem; font-weight: 600; padding: .3rem .8rem; border-radius: 999px; background: var(--paper); color: var(--navy); }
+    .modal-meta span.gold { background: var(--gold-soft); color: var(--navy); }
+    .modal-content h2 { font-size: clamp(1.7rem, 4.5vw, 2.4rem); color: var(--navy); margin-bottom: 1.2rem; }
+    .modal-text { font-family: var(--serif); font-size: 1.15rem; line-height: 1.8; color: #263047; }
+    .modal-text p:last-child { margin-bottom: 0; }
+
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+    /* =========================================================
+       KONTAK
+       ========================================================= */
+    #kontak { background: var(--white); }
+    .kontak-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(2rem, 6vw, 4.5rem); }
+    .kontak-info h3 { font: 700 1.05rem var(--sans); color: var(--navy); margin-bottom: .2rem; }
+    .kontak-info p { color: var(--muted); margin-bottom: 1.3rem; }
+    form.saran { display: grid; gap: 1.1rem; }
+    .field label { display: block; font-weight: 600; font-size: .93rem; margin-bottom: .35rem; color: var(--navy); }
+    .field input, .field textarea {
+      width: 100%; padding: .85rem 1rem; font: 400 1rem var(--sans); color: var(--ink);
+      background: var(--paper); border: 1px solid var(--line); border-radius: 8px;
+    }
+    .field input:focus, .field textarea:focus { outline: none; border-color: var(--navy); background: var(--white); box-shadow: 0 0 0 3px rgba(185,151,79,.35); }
+    .field textarea { min-height: 140px; resize: vertical; }
+    .form-note { font-size: .9rem; color: var(--muted); margin: 0; min-height: 1.4em; }
+    .form-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    @media (max-width: 860px) { .kontak-grid { grid-template-columns: 1fr; } }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+    .site-footer { background: var(--navy); color: #cbd5e6; border-top: 3px solid var(--gold); padding-top: 3.2rem; }
+    .footer-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 2.4rem; padding-bottom: 2.6rem; }
+    .site-footer h3 { font: 700 1.05rem var(--sans); color: var(--white); margin-bottom: .8rem; }
+    .site-footer p { margin: 0 0 .5rem; font-size: .96rem; }
+    .footer-brand { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: var(--white); margin-bottom: .6rem; }
+    .jam { list-style: none; margin: 0; padding: 0; font-size: .96rem; }
+    .jam li { display: flex; justify-content: space-between; gap: 1rem; padding: .35rem 0; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .socials { display: flex; flex-wrap: wrap; gap: .6rem; }
+    .socials a {
+      text-decoration: none; font-weight: 600; font-size: .9rem; color: var(--white);
+      border: 1px solid rgba(255,255,255,.3); padding: .5rem .9rem; border-radius: 6px;
+    }
+    .socials a:hover { border-color: var(--gold); color: var(--gold-soft); }
+    .copyright { border-top: 1px solid rgba(255,255,255,.12); padding: 1.2rem 0; font-size: .88rem; color: #93a2bd; }
+    @media (max-width: 860px) { .footer-grid { grid-template-columns: 1fr; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ============================ HEADER ============================ -->
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#beranda" class="brand" aria-label="Perpustakaan SMAN 1 Blora – ke beranda">
+      <!--
+        LOGO: ini logo placeholder (SVG). Untuk memakai logo asli sekolah,
+        ganti seluruh <svg> di bawah dengan:
+        <img class="brand-logo" src="logo-sman1blora.png" alt="Logo SMAN 1 Blora">
+      -->
+      <svg class="brand-logo" viewBox="0 0 48 48" role="img" aria-label="Logo placeholder SMAN 1 Blora">
+        <path d="M24 2 43 9v15c0 11-8 18-19 22C13 42 5 35 5 24V9z" fill="#163158" stroke="#b9974f" stroke-width="2.5"/>
+        <path d="M24 17c-3-2.2-7-2.6-11-2v15c4-.6 8-.2 11 2 3-2.2 7-2.6 11-2V15c-4-.6-8-.2-11 2z" fill="none" stroke="#eadcb9" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M24 17v15" stroke="#eadcb9" stroke-width="2"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">Pojok Cagar Budaya SMAN 1 Blora</span>
+        <span class="brand-tag">Jendela Ilmu dan Sejarah Berkelanjutan</span>
+      </span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false" aria-controls="navPanel"><span></span></button>
+
+    <div class="nav-panel" id="navPanel">
+      <nav aria-label="Menu utama">
+        <ul class="nav-links">
+          <li><a href="#beranda" data-section="beranda">Home</a></li>
+          <li><a href="#sejarah" data-section="sejarah">Sejarah Perpustakaan</a></li>
+          <li><a href="#koleksi" data-section="koleksi">Koleksi Benda Bersejarah</a></li>
+          <li><a href="#kontak" data-section="kontak">Kontak/Saran</a></li>
+        </ul>
+      </nav>
+      <form class="search" id="searchForm" role="search" autocomplete="off">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" id="searchInput" placeholder="Cari benda atau arsip…" aria-label="Cari koleksi">
+      </form>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ============================ HERO ============================ -->
+  <section class="hero" id="beranda">
+    <div class="container hero-grid">
+      <div>
+        <h1>Jendela Ilmu dan Sejarah Berkelanjutan</h1>
+        <p class="hero-lead">
+          Selamat datang di website resmi Pojok Cagar Budaya SMAN 1 Blora. Di sini tersimpan buku, arsip,
+          dan benda-benda yang merekam perjalanan sekolah kita dari masa ke masa.
+        </p>
+        <div class="hero-actions">
+          <a href="#koleksi" class="btn btn-gold">Jelajahi Koleksi Sejarah</a>
+          <a href="#sejarah" class="btn btn-ghost">Sejarah Perpustakaan</a>
+        </div>
+      </div>
+      <!-- Kartu katalog: diisi otomatis dari artikel pertama di array ARTIKEL -->
+      <button class="catalog-card" id="featured" aria-label="Buka koleksi unggulan"></button>
+    </div>
+  </section>
+
+  <!-- ==================== SEJARAH PERPUSTAKAAN ==================== -->
+  <section class="section" id="sejarah">
+    <div class="container">
+      <div class="section-head">
+        <h2>Sejarah Perpustakaan SMAN 1 Blora</h2>
+        <p>Dari ruang baca sederhana hingga pusat literasi dan pelestarian arsip sekolah.</p>
+      </div>
+      <div class="sejarah-grid">
+        <div>
+          <!-- ✏️ GANTI teks di bawah dengan sejarah asli perpustakaan (ini hanya teks contoh). -->
+          <div class="prose">
+            <p>
+              Perpustakaan SMAN 1 Blora tumbuh bersama sekolahnya. Berawal dari sebuah lemari buku di
+              ruang guru, koleksinya bertambah lewat sumbangan guru, alumni, dan orang tua siswa, hingga
+              akhirnya menempati ruangan tersendiri.
+            </p>
+            <p>
+              Selain menyimpan buku pelajaran dan bacaan umum, perpustakaan juga merawat arsip sekolah:
+              foto kegiatan, dokumen lama, dan benda-benda yang pernah dipakai warga sekolah. Koleksi
+              inilah yang kini kami tuliskan sejarahnya di halaman ini.
+            </p>
+          </div>
+          <div class="peran">
+            <div><h3>Bagi siswa</h3><p>Tempat belajar, membaca, dan mencari rujukan tugas.</p></div>
+            <div><h3>Bagi alumni</h3><p>Tempat menemukan kembali jejak masa sekolah lewat foto dan arsip.</p></div>
+            <div><h3>Bagi sekolah</h3><p>Penjaga ingatan kolektif agar sejarah SMAN 1 Blora tidak hilang.</p></div>
+          </div>
+        </div>
+
+        <!-- Linimasa dirender dari array SEJARAH_PERPUSTAKAAN di bagian JavaScript -->
+        <ol class="timeline" id="timeline" aria-label="Linimasa perpustakaan"></ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= KOLEKSI BENDA BERSEJARAH ================= -->
+  <section class="section" id="koleksi">
+    <div class="container">
+      <div class="section-head">
+        <h2>Koleksi Benda Bersejarah</h2>
+        <p>Artikel tentang benda, foto, dokumen, dan kitab yang menjadi saksi perjalanan sekolah. Klik kartu untuk membaca kisah lengkapnya.</p>
+      </div>
+      <div class="filters" id="filters" role="group" aria-label="Filter kategori"></div>
+      <div class="result-info" id="resultInfo" aria-live="polite"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- ========================= KONTAK ========================= -->
+  <section class="section" id="kontak">
+    <div class="container kontak-grid">
+      <div class="kontak-info">
+        <div class="section-head">
+          <h2>Kontak dan Saran</h2>
+          <p>Punya foto, dokumen, atau cerita tentang sekolah? Atau ada masukan untuk perpustakaan? Tulis di sini.</p>
+        </div>
+        <h3>Datang langsung</h3>
+        <p id="kontakAlamat"></p>
+        <h3>Surel</h3>
+        <p id="kontakEmail"></p>
+      </div>
+
+      <form class="saran" id="saranForm">
+        <div class="field">
+          <label for="fNama">Nama</label>
+          <input id="fNama" name="nama" type="text" required>
+        </div>
+        <div class="field">
+          <label for="fEmail">Surel <span style="font-weight:400;color:var(--muted)">(opsional)</span></label>
+          <input id="fEmail" name="email" type="email">
+        </div>
+        <div class="field">
+          <label for="fPesan">Pesan atau saran</label>
+          <textarea id="fPesan" name="pesan" required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-navy">Kirim Saran</button>
+          <p class="form-note" id="formNote" aria-live="polite"></p>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <div class="footer-brand">Perpustakaan SMAN 1 Blora</div>
+      <p id="footAlamat"></p>
+      <div class="socials" id="socials" style="margin-top:1rem"></div>
+    </div>
+    <div>
+      <h3>Jam Operasional</h3>
+      <ul class="jam" id="jam"></ul>
+    </div>
+    <div>
+      <h3>Menu</h3>
+      <p><a href="#sejarah">Sejarah Perpustakaan</a></p>
+      <p><a href="#koleksi">Koleksi Benda Bersejarah</a></p>
+      <p><a href="#kontak">Kontak/Saran</a></p>
+    </div>
+  </div>
+  <div class="copyright">
+    <div class="container" id="copyright"></div>
+  </div>
+</footer>
+
+<!-- ============================ MODAL ============================ -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box" id="modalBox">
+    <button class="modal-close" id="modalClose" aria-label="Tutup artikel">&times;</button>
+    <div class="modal-img"><img id="modalImg" alt=""></div>
+    <div class="modal-content">
+      <div class="modal-meta" id="modalMeta"></div>
+      <h2 id="modalTitle"></h2>
+      <div class="modal-text" id="modalText"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   ✏️  BAGIAN 1 – PENGATURAN UMUM (alamat, jam buka, media sosial)
+   Ubah nilai di dalam tanda kutip sesuai data sekolah Anda.
+   ===================================================================== */
+const PENGATURAN = {
+  alamat: "Jl. Tentara Pelajar No. 21, Blora, Jawa Tengah",   // ← ganti dengan alamat asli
+  email:  "perpustakaan@example.sch.id",                      // ← surel tujuan formulir saran
+  jamOperasional: [
+    { hari: "Senin – Kamis", jam: "07.00 – 15.00 WIB" },
+    { hari: "Jumat",         jam: "07.00 – 11.00 WIB" },
+    { hari: "Sabtu – Minggu", jam: "Tutup" }
+  ],
+  sosialMedia: [
+    { nama: "Instagram", url: "#" },   // ← ganti "#" dengan tautan asli
+    { nama: "YouTube",   url: "#" },
+    { nama: "Facebook",  url: "#" }
+  ]
+};
+
+/* =====================================================================
+   ✏️  BAGIAN 2 – LINIMASA SEJARAH PERPUSTAKAAN (CONTOH)
+   Ganti "tahun" dengan tahun sebenarnya, dan isi teksnya dengan fakta asli.
+   Tambah/hapus blok { ... } sesuai kebutuhan (jangan lupa koma di antaranya).
+   ===================================================================== */
+const SEJARAH_PERPUSTAKAAN = [
+  { tahun: "Masa awal",       judul: "Koleksi pertama",
+    teks: "Buku-buku pertama dikumpulkan dan disimpan di lemari sederhana untuk dipinjam guru dan siswa." },
+  { tahun: "Masa tumbuh",     judul: "Ruang tersendiri",
+    teks: "Perpustakaan menempati ruangan sendiri dengan rak, meja baca, dan petugas yang mencatat peminjaman." },
+  { tahun: "Masa modern",     judul: "Katalog dan pendataan",
+    teks: "Pendataan koleksi mulai dirapikan sehingga buku dan arsip lebih mudah dicari." },
+  { tahun: "Kini",            judul: "Pelestarian arsip sekolah",
+    teks: "Perpustakaan tidak hanya meminjamkan buku, tetapi juga mendokumentasikan benda dan arsip bersejarah sekolah." }
+];
+
+/* =====================================================================
+   ✏️  BAGIAN 3 – DATA ARTIKEL BENDA BERSEJARAH  ← INI YANG PALING SERING DIUBAH
+   ---------------------------------------------------------------------
+   CARA MENAMBAH ARTIKEL:
+     1. Salin satu blok { id: ..., ... } lengkap dengan kurung kurawalnya.
+     2. Tempel di bawah blok terakhir, beri koma (,) di antara blok.
+     3. Ubah id (harus UNIK, misalnya 7, 8, 9 …) dan isi kolom lainnya.
+
+   CARA MENGEDIT   : ubah teks di dalam tanda kutip.
+   CARA MENGHAPUS  : hapus satu blok { ... } beserta komanya.
+
+   KETERANGAN KOLOM:
+     id          → nomor unik artikel
+     judul       → nama benda / arsip
+     kategori    → bebas, mis. "Benda", "Foto", "Dokumen", "Kitab"
+                   (tombol filter kategori dibuat otomatis dari sini)
+     tahun       → tahun atau era, mis. "1960" atau "Era 1970-an"
+     gambar      → alamat gambar. Boleh:
+                     - file lokal   : "gambar/mesin-ketik.jpg"
+                     - tautan online: "https://situs.com/foto.jpg"
+                     - dikosongkan ("") → tampil gambar pengganti otomatis
+     ringkasan   → 1–2 kalimat, tampil di kartu
+     isiLengkap  → isi artikel penuh, tampil di popup.
+                   Pisahkan paragraf dengan \n\n (dua kali "backslash n").
+
+   ⚠️ SEMUA ISI DI BAWAH ADALAH DATA CONTOH. Ganti dengan fakta asli sekolah.
+   ===================================================================== */
+const ARTIKEL = [
+  {
+    id: 1,
+    judul: "Fosil Gading Gajah Purba Elephas hisudindricus",
+    kategori: "Fosil",
+    tahun: "200.000 – 300.000 tahun lalu",
+    gambar: "fosil-gading-stegodon-7-1024x683.jpg",   // contoh: "gambar/gading-gajah-purba.jpg"
+    ringkasan: "Fosil gading dari spesies nenek moyang gajah Asia modern yang hidup di zaman Paleolitikum Tengah, ditemukan warga Kradenan, Blora, pada tahun 2015.",
+    isiLengkap: "Fosil gading gajah purba berikut merupakan fosil dari spesies Elephas hisindindricus. Spesies ini merupakan nenek moyang langsung dari gajah Asia modern (Elephas maximus). Fosil tersebut diperkirakan berasal dari 200.000 hingga 300.000 tahun yang lalu. Rentang waktu 200.000 sampai 300.000 tahun yang lalu berada di zaman Paleolitikum Tengah (Zaman Batu Tua Tengah). Dimulai sekitar 300.000 tahun yang lalu. Berada di bagian akhir era Pleistosen, di mana bumi mengalami siklus zaman es (glasial) yang dinamis.\n\nBerdasarkan artikel dari Rumah Artefak Blora, fosil gading gajah purba Elephas hisudindricus ditemukan dan dilaporkan oleh Bapak Ponidi, warga Dukuh Sunggun, Desa Medalem, Kecamatan Kradenan, Blora, pada tahun 2015, dan berhasil diselamatkan oleh DINPORABUDPAR Kabupaten Blora.\n\nPenemuan ini memberikan keuntungan besar, baik bagi ilmu pengetahuan maupun masyarakat lokal. Selain menjadi bukti penting kekayaan sejarah fauna purba di Lembah Sungai Solo, fosil ini membantu para peneliti merajut kembali kisah lingkungan purba di Jawa ratusan ribu tahun silam. Di sisi lain, penyelamatan fosil ini memperkaya koleksi cagar budaya Blora yang bernilai edukasi tinggi sekaligus membuktikan tingginya kesadaran warga lokal dalam menjaga warisan sejarah."
+  },
+  {
+    id: 2,
+    judul: "Buku Induk Siswa Angkatan Pertama",
+    kategori: "Dokumen",
+    tahun: "1960-an",
+    gambar: "",
+    ringkasan: "Buku besar bersampul keras yang mencatat identitas dan riwayat belajar siswa angkatan pertama.",
+    isiLengkap: "Buku induk adalah catatan resmi setiap siswa: nama, tempat dan tanggal lahir, nama orang tua, tanggal masuk, hingga tanggal lulus. Semuanya ditulis tangan dengan tinta.\n\nBagi alumni, halaman-halaman ini sering menjadi bukti penting ketika mereka memerlukan keterangan tentang masa sekolahnya. Bagi peneliti sejarah, buku ini memperlihatkan siapa saja yang belajar di sekolah pada tahun-tahun awal.\n\nKarena rapuh, buku ini disimpan di ruang khusus dan hanya dibuka dengan pendampingan petugas perpustakaan."
+  },
+  {
+    id: 3,
+    judul: "Telepon Engkol Perpustakaan Lama",
+    kategori: "Benda",
+    tahun: "1970-an",
+    gambar: "",
+    ringkasan: "Pesawat telepon berengkol yang dahulu menjadi satu-satunya sambungan komunikasi antar ruang di sekolah.",
+    isiLengkap: "Untuk menelepon, pemakai memutar engkol di sisi pesawat agar operator atau ruangan tujuan menerima tanda panggilan. Suaranya nyaring dan mudah dikenali.\n\nTelepon ini dahulu dipakai untuk menyampaikan pesan penting, seperti panggilan kepada guru atau kabar dari dinas pendidikan. Karena jumlahnya terbatas, telepon dipakai bergantian dan seperlunya.\n\nKini pesawat ini menjadi koleksi peraga. Pengunjung yang lebih muda biasanya penasaran bagaimana cara memakainya."
+  },
+  {
+    id: 4,
+    judul: "Prasasti Peresmian Gedung",
+    kategori: "Benda",
+    tahun: "1970",
+    gambar: "",
+    ringkasan: "Lempeng prasasti yang menandai peresmian gedung sekolah, lengkap dengan tanggal dan nama peresmi.",
+    isiLengkap: "Prasasti ini dipasang untuk mengabadikan peresmian sebuah gedung sekolah. Di permukaannya tertera tanggal peresmian dan nama pejabat yang meresmikan.\n\nPrasasti seperti ini adalah sumber sejarah yang penting karena mencatat waktu dan pelaku peristiwa secara pasti, tanpa bergantung pada ingatan.\n\nSaat gedung mengalami renovasi, prasasti diamankan dan dirawat oleh perpustakaan agar tulisannya tetap terbaca oleh generasi berikutnya."
+  },
+  {
+    id: 5,
+    judul: "Foto Ruang Baca Perpustakaan Lama",
+    kategori: "Foto",
+    tahun: "1980-an",
+    gambar: "",
+    ringkasan: "Foto hitam-putih yang memperlihatkan siswa membaca di ruang perpustakaan dengan rak kayu dan meja panjang.",
+    isiLengkap: "Foto ini menangkap suasana ruang baca pada masa lalu: rak kayu tinggi, meja panjang, dan siswa yang membaca dengan tenang. Kartu katalog masih ditulis dan disusun dengan tangan.\n\nBagi alumni, foto seperti ini sering membangkitkan kenangan. Beberapa alumni bahkan mengenali wajah teman sekelasnya di sudut gambar.\n\nPerpustakaan mengajak alumni yang menyimpan foto lama untuk berbagi salinannya agar arsip visual sekolah makin lengkap."
+  },
+  {
+    id: 6,
+    judul: "Kitab Pelajaran Bahasa Jawa",
+    kategori: "Kitab",
+    tahun: "Era 1950-an",
+    gambar: "",
+    ringkasan: "Buku pelajaran beraksara Jawa dengan kertas menguning yang dahulu dipakai dalam pelajaran bahasa daerah.",
+    isiLengkap: "Buku ini memuat pelajaran membaca dan menulis aksara Jawa, disertai cerita pendek dan tembang untuk latihan. Kertasnya telah menguning, dan sebagian halamannya memiliki coretan tangan pemilik sebelumnya.\n\nCoretan itu justru berharga: ia menunjukkan bagaimana buku ini benar-benar dipakai untuk belajar, bukan sekadar disimpan.\n\nBuku ini termasuk koleksi yang paling rentan. Pembaca diminta memakai sarung tangan dan tidak membawanya keluar dari ruang perpustakaan."
+  }
+  // ⬆️ Tambahkan artikel baru di sini (jangan lupa koma setelah blok sebelumnya).
+];
+
+/* =====================================================================
+   BAGIAN 4 – KODE PROGRAM (tidak perlu diubah kecuali Anda paham JavaScript)
+   ===================================================================== */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (t) => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const state = { q: "", kategori: "Semua" };
+
+/* ---------- Gambar pengganti (jika kolom gambar kosong / gagal dimuat) ---------- */
+function placeholder(item) {
+  const huruf = esc((item.judul || "?").trim().charAt(0).toUpperCase());
+  const kat = esc(item.kategori || "");
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#163158"/><stop offset="1" stop-color="#0d2240"/></linearGradient></defs>
+    <rect width="800" height="600" fill="url(#g)"/>
+    <rect x="40" y="40" width="720" height="520" fill="none" stroke="#b9974f" stroke-opacity=".55" stroke-width="3"/>
+    <text x="400" y="360" text-anchor="middle" font-family="Georgia, serif" font-size="280" font-weight="700" fill="#b9974f" fill-opacity=".9">${huruf}</text>
+    <text x="400" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" fill="#eadcb9">${kat}</text>
+  </svg>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+const imgSrc = (item) => (item.gambar && item.gambar.trim()) ? item.gambar : placeholder(item);
+
+// Jika gambar gagal dimuat, ganti otomatis dengan gambar pengganti
+document.addEventListener("error", (e) => {
+  const el = e.target;
+  if (el.tagName === "IMG" && el.dataset.id && !el.dataset.fallback) {
+    const item = ARTIKEL.find(a => String(a.id) === el.dataset.id);
+    if (item) { el.dataset.fallback = "1"; el.src = placeholder(item); }
+  }
+}, true);
+
+/* ---------- Kartu katalog di hero ---------- */
+function renderFeatured() {
+  const box = $("#featured");
+  const a = ARTIKEL[0];
+  if (!a) { box.hidden = true; return; }
+  box.dataset.id = a.id;
+  box.innerHTML = `
+    <span class="cc-label">Koleksi unggulan</span>
+    <span class="cc-title">${esc(a.judul)}</span>
+    <span class="cc-row">
+      <span><span class="cc-label">Kategori</span><b>${esc(a.kategori)}</b></span>
+      <span><span class="cc-label">Tahun</span><b>${esc(a.tahun)}</b></span>
+    </span>
+    <span class="cc-text">${esc(a.ringkasan)}</span>
+    <span class="cc-more">Baca sejarah lengkap</span>
+    <span class="cc-count">${ARTIKEL.length} koleksi tercatat</span>`;
+}
+
+/* ---------- Linimasa sejarah ---------- */
+function renderTimeline() {
+  $("#timeline").innerHTML = SEJARAH_PERPUSTAKAAN.map(t => `
+    <li>
+      <div class="tl-year">${esc(t.tahun)}</div>
+      <div class="tl-title">${esc(t.judul)}</div>
+      <p>${esc(t.teks)}</p>
+    </li>`).join("");
+}
+
+/* ---------- Filter kategori ---------- */
+function renderFilters() {
+  const kategori = ["Semua", ...new Set(ARTIKEL.map(a => a.kategori))];
+  $("#filters").innerHTML = kategori.map(k =>
+    `<button type="button" class="chip" data-k="${esc(k)}" aria-pressed="${k === state.kategori}">${esc(k)}</button>`
+  ).join("");
+}
+
+/* ---------- Daftar kartu artikel ---------- */
+function getFiltered() {
+  const q = state.q.trim().toLowerCase();
+  return ARTIKEL.filter(a => {
+    const cocokKategori = state.kategori === "Semua" || a.kategori === state.kategori;
+    const teks = [a.judul, a.kategori, a.tahun, a.ringkasan, a.isiLengkap].join(" ").toLowerCase();
+    return cocokKategori && (!q || teks.includes(q));
+  });
+}
+
+function renderGrid() {
+  const list = getFiltered();
+  const grid = $("#grid");
+  const info = $("#resultInfo");
+
+  if (!list.length) {
+    grid.innerHTML = `
+      <div class="empty">
+        <h3>Koleksi tidak ditemukan</h3>
+        <p>Tidak ada koleksi yang cocok${state.q ? ` dengan “${esc(state.q)}”` : ""}. Coba kata kunci lain atau tampilkan semua koleksi.</p>
+        <button type="button" class="btn btn-outline" id="resetBtn">Tampilkan semua koleksi</button>
+      </div>`;
+    info.textContent = "0 koleksi ditemukan";
+    return;
+  }
+
+  grid.innerHTML = list.map(a => `
+    <article class="card">
+      <div class="card-img">
+        <img src="${esc(imgSrc(a))}" data-id="${esc(a.id)}" alt="${esc(a.judul)}" loading="lazy">
+        <span class="badge">${esc(a.kategori)}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-year">${esc(a.tahun)}</div>
+        <h3>${esc(a.judul)}</h3>
+        <p class="card-sum">${esc(a.ringkasan)}</p>
+        <button type="button" class="btn btn-navy" data-open="${esc(a.id)}">Baca Sejarah Lengkap</button>
+      </div>
+    </article>`).join("");
+
+  info.textContent = (list.length === ARTIKEL.length && !state.q)
+    ? `Menampilkan ${list.length} koleksi`
+    : `Menampilkan ${list.length} dari ${ARTIKEL.length} koleksi`;
+}
+
+/* ---------- Modal artikel ---------- */
+const modal = $("#modal");
+let lastFocus = null;
+
+function openModal(id) {
+  const a = ARTIKEL.find(x => String(x.id) === String(id));
+  if (!a) return;
+  lastFocus = document.activeElement;
+
+  const img = $("#modalImg");
+  img.removeAttribute("data-fallback");
+  img.dataset.id = a.id;
+  img.src = imgSrc(a);
+  img.alt = a.judul;
+
+  $("#modalMeta").innerHTML = `<span class="gold">${esc(a.kategori)}</span><span>${esc(a.tahun)}</span>`;
+  $("#modalTitle").textContent = a.judul;
+  $("#modalText").innerHTML = String(a.isiLengkap || a.ringkasan || "")
+    .split(/\n\s*\n/).map(p => `<p>${esc(p.trim())}</p>`).join("");
+
+  modal.classList.add("open");
+  document.body.classList.add("no-scroll");
+  $("#modalBox").scrollTop = 0;
+  $("#modalClose").focus();
+}
+
+function closeModal() {
+  modal.classList.remove("open");
+  document.body.classList.remove("no-scroll");
+  if (lastFocus) lastFocus.focus();
+}
+
+/* ---------- Footer & kontak ---------- */
+function renderInfo() {
+  $("#kontakAlamat").textContent = PENGATURAN.alamat;
+  $("#kontakEmail").textContent = PENGATURAN.email;
+  $("#footAlamat").textContent = PENGATURAN.alamat;
+  $("#jam").innerHTML = PENGATURAN.jamOperasional.map(j => `<li><span>${esc(j.hari)}</span><span>${esc(j.jam)}</span></li>`).join("");
+  $("#socials").innerHTML = PENGATURAN.sosialMedia.map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.nama)}</a>`).join("");
+  $("#copyright").textContent = `© ${new Date().getFullYear()} Perpustakaan SMAN 1 Blora. Hak cipta dilindungi.`;
+}
+
+/* ---------- Event ---------- */
+// Menu hamburger
+const navToggle = $("#navToggle"), navPanel = $("#navPanel");
+function setMenu(open) {
+  navPanel.classList.toggle("open", open);
+  navToggle.setAttribute("aria-expanded", open);
+  navToggle.setAttribute("aria-label", open ? "Tutup menu" : "Buka menu");
+}
+navToggle.addEventListener("click", () => setMenu(!navPanel.classList.contains("open")));
+navPanel.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
+
+// Pencarian
+const searchInput = $("#searchInput");
+let sudahScroll = false;
+searchInput.addEventListener("input", () => {
+  state.q = searchInput.value;
+  renderGrid();
+  // Saat mulai mengetik, bawa pengunjung ke daftar koleksi (sekali saja)
+  if (state.q && !sudahScroll) { sudahScroll = true; $("#koleksi").scrollIntoView(); }
+});
+searchInput.addEventListener("blur", () => { sudahScroll = false; });
+$("#searchForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  $("#koleksi").scrollIntoView();
+  setMenu(false);
+  searchInput.blur();
+});
+
+// Filter, buka artikel, reset
+document.addEventListener("click", (e) => {
+  const chip = e.target.closest(".chip");
+  if (chip) {
+    state.kategori = chip.dataset.k;
+    renderFilters(); renderGrid();
+    return;
+  }
+  const open = e.target.closest("[data-open]");
+  if (open) return openModal(open.dataset.open);
+  if (e.target.closest("#featured")) return openModal($("#featured").dataset.id);
+  if (e.target.closest("#resetBtn")) {
+    state.q = ""; state.kategori = "Semua"; searchInput.value = "";
+    renderFilters(); renderGrid();
+  }
+});
+
+// Tutup modal: tombol ×, klik area gelap, atau tombol Esc
+$("#modalClose").addEventListener("click", closeModal);
+modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    if (modal.classList.contains("open")) closeModal();
+    else setMenu(false);
+  }
+  // Fokus keyboard tetap berada di dalam modal
+  if (e.key === "Tab" && modal.classList.contains("open")) {
+    const f = [...modal.querySelectorAll("button, [href], input, [tabindex]:not([tabindex='-1'])")];
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+});
+
+// Formulir saran → membuka aplikasi surel pengunjung
+$("#saranForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const f = e.target;
+  const subjek = encodeURIComponent("Saran untuk Perpustakaan SMAN 1 Blora");
+  const isi = encodeURIComponent(`Nama: ${f.nama.value}\nSurel: ${f.email.value || "-"}\n\n${f.pesan.value}`);
+  window.location.href = `mailto:${PENGATURAN.email}?subject=${subjek}&body=${isi}`;
+  $("#formNote").textContent = "Aplikasi surel Anda akan terbuka. Tekan kirim di sana untuk menyelesaikan.";
+});
+
+// Menandai menu yang sedang aktif saat halaman digulir
+const links = [...document.querySelectorAll(".nav-links a")];
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if (en.isIntersecting) {
+      links.forEach(l => l.classList.toggle("active", l.dataset.section === en.target.id));
+    }
+  });
+}, { rootMargin: "-40% 0px -55% 0px" });
+["beranda", "sejarah", "koleksi", "kontak"].forEach(id => observer.observe(document.getElementById(id)));
+
+/* ---------- Jalankan ---------- */
+renderFeatured();
+renderTimeline();
+renderFilters();
+renderGrid();
+renderInfo();
+</script>
+</body>
+</html>
