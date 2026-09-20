@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pojok Cagar Budaya SMAN 1 Blora – Jendela Ilmu dan Sejarah Berkelanjutan</title>
-  <meta name="description" content="Website resmi Perpustakaan SMAN 1 Blora: sejarah perpustakaan dan koleksi artikel benda serta arsip bersejarah sekolah.">
+  <meta name="description" content="Website resmi Pojok Cagar Budaya SMAN 1 Blora: sejarah dan koleksi artikel benda serta arsip bersejarah sekolah.">
 
   <!-- Font (opsional). Jika offline, browser otomatis memakai font cadangan. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -581,6 +581,7 @@ const SEJARAH_PERPUSTAKAAN = [
 
    KETERANGAN KOLOM:
      id          → nomor unik artikel
+                   ⚠️ Jangan ubah id artikel yang QR code-nya sudah dicetak!
      judul       → nama benda / arsip
      kategori    → bebas, mis. "Benda", "Foto", "Dokumen", "Kitab"
                    (tombol filter kategori dibuat otomatis dari sini)
@@ -774,6 +775,7 @@ function openModal(id) {
   const a = ARTIKEL.find(x => String(x.id) === String(id));
   if (!a) return;
   lastFocus = document.activeElement;
+  history.replaceState(null, "", "#artikel-" + a.id);   // alamat khusus artikel (untuk QR code)
 
   const img = $("#modalImg");
   img.removeAttribute("data-fallback");
@@ -795,6 +797,7 @@ function openModal(id) {
 function closeModal() {
   modal.classList.remove("open");
   document.body.classList.remove("no-scroll");
+  history.replaceState(null, "", location.pathname + location.search);   // hapus #artikel-… dari alamat
   if (lastFocus) lastFocus.focus();
 }
 
@@ -892,12 +895,24 @@ const observer = new IntersectionObserver((entries) => {
 }, { rootMargin: "-40% 0px -55% 0px" });
 ["beranda", "sejarah", "koleksi", "kontak"].forEach(id => observer.observe(document.getElementById(id)));
 
+/* ---------- Buka artikel dari tautan / QR code ----------
+   Contoh alamat: https://alamatwebsite/#artikel-1  → langsung membuka artikel dengan id 1 */
+function bukaDariLink() {
+  const m = location.hash.match(/^#artikel-(.+)$/);
+  if (m) {
+    $("#koleksi").scrollIntoView();
+    openModal(decodeURIComponent(m[1]));
+  }
+}
+window.addEventListener("hashchange", bukaDariLink);
+
 /* ---------- Jalankan ---------- */
 renderFeatured();
 renderTimeline();
 renderFilters();
 renderGrid();
 renderInfo();
+bukaDariLink();
 </script>
 </body>
 </html>
